@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Spiral Fries UK</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+:root{
+  --gold:#f4b400;
+  --gold2:#f2a900;
+  --canvas:#c98a12;
+  --black:#0f0f0f;
+  --glass: rgba(255,255,255,0.12);
+  --stroke: rgba(255,255,255,0.25);
+}
+
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+
+body{
+  margin:0;
+  background: var(--canvas);
+  font-family: Inter, system-ui, sans-serif;
+  color:white;
+}
+
+.wrap{
+  max-width:1400px;
+  margin:auto;
+  padding:28px;
+}
+
+/* HEADER */
+header{
+  position:sticky;
+  top:14px;
+  z-index:100;
+  background: linear-gradient(90deg,var(--gold),var(--gold2));
+  border-radius:999px;
+  padding:10px 22px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  box-shadow:0 20px 40px rgba(0,0,0,.3);
+}
+
+.logo{
+  font-weight:900;
+  letter-spacing:1px;
+}
+
+nav a{
+  margin:0 12px;
+  text-decoration:none;
+  font-weight:700;
+  color:white;
+}
+
+.social{
+  width:42px;
+  height:42px;
+  background:black;
+  border-radius:50%;
+  display:grid;
+  place-items:center;
+  box-shadow:0 6px 18px rgba(0,0,0,.5);
+  transition:.25s;
+}
+.social:hover{
+  transform:translateY(-3px) scale(1.05);
+  box-shadow:0 12px 25px rgba(0,0,0,.7);
+}
+.social svg{
+  width:18px;
+  height:18px;
+}
+
+.cta{
+  background:black;
+  color:white;
+  padding:10px 22px;
+  border-radius:999px;
+  font-weight:700;
+  margin-left:10px;
+  text-decoration:none;
+  display:inline-flex;
+  align-items:center;
+}
+
+/* HERO */
+.hero{
+  height:80vh;
+  margin-top:20px;
+  border-radius:32px;
+  background:
+    linear-gradient(120deg, rgba(0,0,0,.6), transparent),
+    url("https://uploads.onecompiler.io/44b9yhsxc/44bfw5hqp/2BFC6631-AEEA-4265-9B35-0653239C1265.png");
+  background-size:cover;
+  background-position:center;
+  display:flex;
+  align-items:center;
+  padding:60px;
+  box-shadow:0 40px 80px rgba(0,0,0,.35);
+}
+
+.hero h1{
+  font-size:clamp(50px,6vw,90px);
+  line-height:.9;
+  margin:0;
+}
+
+/* SECTIONS */
+section{
+  margin-top:20px;
+  padding:24px;
+  border-radius:22px;
+  background:var(--glass);
+  border:1px solid var(--stroke);
+  backdrop-filter: blur(15px);
+  box-shadow:0 30px 60px rgba(0,0,0,.25);
+}
+
+h2{margin-top:0;font-size:32px}
+
+/* About bigger */
+#about{
+  padding:70px;
+  font-size:22px;
+  line-height:1.6;
+}
+#about h2{
+  font-size:48px;
+  margin-bottom:18px;
+}
+
+.grid{
+  display:grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap:18px;
+}
+@media (max-width: 700px){
+  .grid{ grid-template-columns: 1fr; }
+  #about{ padding:40px; font-size:18px; }
+  #about h2{ font-size:34px; }
+}
+
+.card{
+  background:rgba(0,0,0,.25);
+  padding:20px;
+  border-radius:20px;
+  border:1px solid rgba(255,255,255,.1);
+  transition:.4s;
+}
+.card:hover{
+  transform:translateY(-10px) scale(1.02);
+  box-shadow:0 30px 60px rgba(0,0,0,.4);
+}
+
+.img{
+  height:240px;
+  border-radius:18px;
+  overflow:hidden;
+  margin-bottom:10px;
+  background:rgba(255,255,255,.15);
+}
+.img img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+}
+
+/* COMMENTS */
+.testimonial{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-top:12px;
+}
+
+/* FLOAT */
+.float-book{
+  position:fixed;
+  bottom:30px;
+  right:30px;
+  background:black;
+  padding:14px 26px;
+  border-radius:999px;
+  box-shadow:0 20px 40px rgba(0,0,0,.5);
+  color:#fff;
+  text-decoration:none;
+  font-weight:800;
+}
+
+/* REVEAL */
+.reveal{
+  opacity:0;
+  transform:translateY(40px);
+  transition:1s;
+}
+.reveal.show{
+  opacity:1;
+  transform:none;
+}
+
+/* ===== Booking Popup (Modal) ===== */
+.modal{
+  position:fixed;
+  inset:0;
+  background: rgba(0,0,0,.6);
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  z-index:9999;
+}
+.modal.open{ display:flex; }
+
+.modal-box{
+  width:min(720px, 100%);
+  background: rgba(15,15,15,.92);
+  border: 1px solid rgba(255,255,255,.18);
+  border-radius: 22px;
+  box-shadow: 0 30px 80px rgba(0,0,0,.55);
+  overflow:hidden;
+}
+
+.modal-head{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  padding:16px 18px;
+  background: linear-gradient(90deg, rgba(244,180,0,.25), rgba(242,169,0,.18));
+  border-bottom: 1px solid rgba(255,255,255,.10);
+}
+.modal-head h3{ margin:0; font-size:20px; letter-spacing:.2px; }
+
+.modal-close{
+  width:40px; height:40px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.35);
+  color:#fff;
+  cursor:pointer;
+  font-size:18px;
+}
+
+.modal-body{
+  padding:18px;
+  display:grid;
+  gap:12px;
+}
+
+.modal-body label{ font-weight:800; opacity:.95; }
+
+.modal-body input,
+.modal-body select,
+.modal-body textarea{
+  width:100%;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid rgba(255,255,255,.18);
+  background: rgba(0,0,0,.25);
+  color:#fff;
+  outline:none;
+}
+
+.modal-row{
+  display:grid;
+  grid-template-columns: 1fr 1fr;
+  gap:12px;
+}
+@media (max-width: 640px){
+  .modal-row{ grid-template-columns: 1fr; }
+}
+
+.modal-actions{
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+  justify-content:flex-end;
+  padding: 0 18px 18px;
+}
+
+.modal-submit{
+  background:#000;
+  color:#fff;
+  padding:12px 18px;
+  border-radius:999px;
+  border:1px solid rgba(255,255,255,.12);
+  cursor:pointer;
+  font-weight:900;
+  box-shadow: 0 12px 28px rgba(0,0,0,.45);
+}
+
+.modal-note{
+  opacity:.85;
+  font-size:13px;
+  margin-right:auto;
+}
+</style>
+</head>
+
+<body>
+<div class="wrap">
+
+<header>
+  <div class="logo">SPIRAL FRIES</div>
+
+  <nav>
+    <a href="#about">About</a>
+    <a href="#menu">Menu</a>
+    <a href="#booking">Booking</a>
+    <a href="#reviews">Reviews</a>
+  </nav>
+
+  <div style="display:flex;align-items:center;gap:10px;">
+    <!-- Facebook (fixed link) -->
+    <a class="social" href="https://www.facebook.com/spiralfriesuk" target="_blank" aria-label="Facebook">
+      <svg viewBox="0 0 24 24"><path fill="white" d="M14 9h3V6h-3c-2.2 0-4 1.8-4 4v3H7v3h3v6h3v-6h3l1-3h-4v-3c0-.6.4-1 1-1z"/></svg>
+    </a>
+
+    <!-- Instagram -->
+    <a class="social" href="https://www.instagram.com/spiralfriesuk" target="_blank" aria-label="Instagram">
+      <svg viewBox="0 0 24 24"><path fill="white" d="M7 2h10a5 5 0 0 1 5 5v10a5 5 0 0 1-5 5H7a5 5 0 0 1-5-5V7a5 5 0 0 1 5-5zm10 2H7a3 3 0 0 0-3 3v10a3 3 0 0 0 3 3h10a3 3 0 0 0 3-3V7a3 3 0 0 0-3-3zm-5 3.5A4.5 4.5 0 1 1 7.5 12 4.5 4.5 0 0 1 12 7.5z"/></svg>
+    </a>
+
+    <!-- TikTok -->
+    <a class="social" href="https://www.tiktok.com/@spiralfriesuk" target="_blank" aria-label="TikTok">
+      <svg viewBox="0 0 24 24"><path fill="white" d="M16 1c1.5 2.2 3.3 3.4 6 3.6v4.1c-2.4-.1-4.4-.8-6-2v7.9c0 4-3.2 7.2-7.2 7.2S1.6 18.6 1.6 14.6c0-4 3.2-7.2 7.2-7.2.4 0 .9 0 1.3.1v4.4c-.4-.2-.8-.3-1.3-.3-1.8 0-3.2 1.4-3.2 3.2s1.4 3.2 3.2 3.2 3.2-1.4 3.2-3.2V1h4z"/></svg>
+    </a>
+
+    <!-- LinkedIn -->
+    <a class="social" href="https://www.linkedin.com/company/spiral-fries-uk/" target="_blank" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24">
+        <path fill="white" d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1s2.48 1.12 2.48 2.5zM.5 23.5h4V7.5h-4v16zm7-16h3.8v2.2h.05c.53-1 1.82-2.2 3.75-2.2 4 0 4.75 2.63 4.75 6.05v7h-4v-6.2c0-1.48-.03-3.38-2.06-3.38-2.06 0-2.38 1.6-2.38 3.27v6.31h-4v-16z"/>
+      </svg>
+    </a>
+
+    <a class="cta book-btn" href="#">Book Now</a>
+  </div>
+</header>
+
+<div class="hero">
+  <h1>Spiral Fries</h1>
+</div>
+
+<section id="about" class="reveal">
+  <h2>About Us</h2>
+  At Spiral Fries, based in Doncaster, we serve freshly hand-cut spiral fries with a premium mobile catering experience. Our business is proudly run by a Polish founder, bringing European street-food passion and craftsmanship to UK events.
+  <br><br>
+  Our mission is simple — premium ingredients, perfectly seasoned fries, and fast, friendly service your guests will love.
+  <br><br>
+  Every portion is prepared and cooked on-site using high quality potatoes, bold seasonings and crowd-pleasing vegan-friendly sauces, served fast from our professional catering stand. Although rooted in Yorkshire, we travel around UK to cater weddings, corporate events, festivals, markets and private functions.
+</section>
+
+<section id="menu" class="reveal">
+  <h2>Menu</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="img"><img src="https://chatgpt.com/backend-api/estuary/public_content/enc/eyJpZCI6Im1fNjk3NDAxNjQ5NTE4ODE5MWIzMmQxMmVlNWFiZmNjOTA6ZmlsZV8wMDAwMDAwMDU4MjA3MWY0ODg3MmM0NDJiNTQwODM1ZCIsInRzIjoiMjA0NzYiLCJwIjoicHlpIiwiY2lkIjoiMSIsInNpZyI6IjI2MzIyYTA1YTE4MjAxYmI5YjM4MTA2MzQwNmFlNDQ4YmZjYmNkYzZhZTdlNTkzZjNkZmNiNzU2ZmM1YTM3NzkiLCJ2IjoiMCIsImdpem1vX2lkIjpudWxsLCJjcyI6bnVsbCwiY3AiOm51bGwsIm1hIjpudWxsfQ==" alt="Classic Spiral"></div>
+      Classic Spiral - Our signature crispy spiral fries, served with delicious dips and flavourful seasonings.
+    </div>
+
+    <div class="card">
+      <div class="img"><img src="https://chatgpt.com/backend-api/estuary/public_content/enc/eyJpZCI6Im1fNjk3NDAzMTU1ZmVjODE5MTk3Njc1ZGI1N2JhNWNlMDU6ZmlsZV8wMDAwMDAwMGQwYTQ3MjBhYjU2N2ZkMGM1ZTg2MWE3OCIsInRzIjoiMjA0NzYiLCJwIjoicHlpIiwiY2lkIjoiMSIsInNpZyI6Ijk4YjQ5NTg2YmViMWY1NGI3ZTNjNDFhNWVhOTU5YTkzZTUzZDk2NTU5YzI5ZThlMGM5MzA1ZTE5ZmY0Y2E3NzkiLCJ2IjoiMCIsImdpem1vX2lkIjpudWxsLCJjcyI6bnVsbCwiY3AiOm51bGwsIm1hIjpudWxsfQ==" alt="Loaded Chicken"></div>
+      Loaded Chicken - Loaded spiral fries topped with tender shredded chicken, a mix of sauces, melted cheese and flavourful seasoning.
+    </div>
+
+    <div class="card">
+      <div class="img"><img src="https://chatgpt.com/backend-api/estuary/public_content/enc/eyJpZCI6Im1fNjk3NDAxMTdjZGU0ODE5MWEzOTI5OTM2NDZhYzAwNjI6ZmlsZV8wMDAwMDAwMDI4ZmM3MWY0OWM3MGI5ZDBlMzBmNDBhNyIsInRzIjoiMjA0NzYiLCJwIjoicHlpIiwiY2lkIjoiMSIsInNpZyI6ImU2MDRjNWY2MDEwYmI0NzVkNGZlYWViMGE3ODZmN2RkYWE3ZTdhNzc2YTViMTk2Mjc3YjBkNGRjNWU3MTllOTkiLCJ2IjoiMCIsImdpem1vX2lkIjpudWxsLCJjcyI6bnVsbCwiY3AiOm51bGwsIm1hIjpudWxsfQ==" alt="Loaded Burger"></div>
+      Loaded Burger - Seasoned burger meat piled on crispy spiral fries, topped with melted cheese, crispy onions and our flavourful sauces.
+    </div>
+  </div>
+</section>
+
+<section id="booking" class="reveal">
+  <h2>Types of Booking</h2>
+  <div class="grid">
+    <div class="card">
+      <div class="img"><img src="https://uploads.onecompiler.io/44b9yhsxc/44bgfpdhy/IMG_2010.jpeg" alt="Weddings"></div>
+      <strong style="font-size:24px;display:block;margin-top:10px;">Weddings</strong>
+    </div>
+
+    <div class="card">
+      <div class="img"><img src="https://uploads.onecompiler.io/44b9yhsxc/44bgfpdhy/IMG_7175.jpeg" alt="Corporate"></div>
+      <strong style="font-size:24px;display:block;margin-top:10px;">Corporate</strong>
+    </div>
+
+    <div class="card">
+      <div class="img"><img src="https://uploads.onecompiler.io/44b9yhsxc/44bgfpdhy/IMG_7007.png" alt="Festivals"></div>
+      <strong style="font-size:24px;display:block;margin-top:10px;">Festivals</strong>
+    </div>
+
+    <div class="card">
+      <div class="img"><img src="https://uploads.onecompiler.io/44b9yhsxc/44bgfpdhy/IMG_7176.jpeg" alt="Private Events"></div>
+      <strong style="font-size:24px;display:block;margin-top:10px;">Private Events</strong>
+    </div>
+  </div>
+</section>
+
+<section id="reviews" class="reveal">
+  <h2>Comments</h2>
+  <div class="testimonial">⭐⭐⭐⭐⭐ Best fries in the UK</div>
+  <div class="testimonial">🔥 Unreal at our festival</div>
+</section>
+
+<footer class="reveal">
+  © 2026 Spiral Fries UK
+</footer>
+
+</div>
+
+<a class="float-book book-btn" href="#">Book Now</a>
+
+<!-- BOOKING POPUP -->
+<div class="modal" id="bookingModal" aria-hidden="true">
+  <div class="modal-box" role="dialog" aria-modal="true" aria-labelledby="bookingTitle">
+    <div class="modal-head">
+      <h3 id="bookingTitle">Book Spiral Fries UK</h3>
+      <button class="modal-close" id="closeBooking" type="button" aria-label="Close">✕</button>
+    </div>
+
+    <form id="bookingForm"
+      action="https://docs.google.com/forms/d/e/1FAIpQLSeKOvNsTE75JcYF5FO9RqFYfx4RthG2d8y6APICh4aVFFh9Wg/formResponse"
+      method="POST"
+      target="hidden_iframe">
+
+      <div class="modal-body">
+        <div class="modal-row">
+          <div>
+            <label for="bname">Name</label>
+            <input id="bname" name="entry.1542310162" type="text" required placeholder="Your name">
+          </div>
+          <div>
+            <label for="bphone">Phone</label>
+            <input id="bphone" name="entry.147458240" type="text" required placeholder="07...">
+          </div>
+        </div>
+
+        <div class="modal-row">
+          <div>
+            <label for="bemail">Email</label>
+            <input id="bemail" name="entry.1760908652" type="email" required placeholder="you@example.com">
+          </div>
+          <div>
+            <label for="btype">Booking type</label>
+            <select id="btype" name="entry.294273649" required>
+              <option value="">Choose booking type…</option>
+              <option>Weddings</option>
+              <option>Corporate Events</option>
+              <option>Festivals</option>
+              <option>Private Parties</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="modal-row">
+          <div>
+            <label for="bdate">Event date</label>
+            <input id="bdate" name="entry.602307690" type="date" required>
+          </div>
+          <div>
+            <label for="blocation">Location / City</label>
+            <input id="blocation" name="entry.360147946" type="text" required placeholder="Manchester, London…">
+          </div>
+        </div>
+
+        <div>
+          <label for="bmessage">Details</label>
+          <textarea id="bmessage" name="entry.684000561" rows="4" placeholder="Guests, timings, anything we should know…"></textarea>
+        </div>
+      </div>
+
+      <div class="modal-actions">
+        <div class="modal-note">After submitting, check your email for Google Forms receipt (if enabled in Forms settings).</div>
+        <button class="modal-submit" type="submit">Send Booking Request</button>
+      </div>
+    </form>
+
+    <!-- Thank you state -->
+    <div id="bookingThanks" style="display:none;padding:40px;text-align:center;">
+      <h2 style="margin-top:0;">Thank you 🎉</h2>
+      <p style="font-size:18px;opacity:.9;">
+        Your booking request has been sent.<br>
+        We’ll get back to you shortly.
+      </p>
+      <button id="closeThanks"
+        style="margin-top:20px;background:black;color:white;padding:12px 20px;
+        border-radius:999px;font-weight:800;border:none;cursor:pointer;">
+        Close
+      </button>
+    </div>
+
+   <iframe name="hidden_iframe" id="hidden_iframe" style="display:none;"></iframe>
+  </div>
+</div>
+
+<script>
+  // Reveal animation
+  const revealObs = new IntersectionObserver(entries=>{
+    entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add("show"); })
+  });
+  document.querySelectorAll(".reveal").forEach(el=>revealObs.observe(el));
+
+  // Modal open/close
+  const modal = document.getElementById("bookingModal");
+  const closeBtn = document.getElementById("closeBooking");
+  const bookBtns = document.querySelectorAll(".book-btn");
+  const bookingForm = document.getElementById("bookingForm");
+  const thanks = document.getElementById("bookingThanks");
+  const closeThanks = document.getElementById("closeThanks");
+
+  function openModal(){
+    modal.classList.add("open");
+    modal.setAttribute("aria-hidden","false");
+    document.body.style.overflow = "hidden";
+    // reset state each open
+    thanks.style.display = "none";
+    bookingForm.style.display = "block";
+    setTimeout(()=> document.getElementById("bname").focus(), 50);
+  }
+
+  function closeModal(){
+    modal.classList.remove("open");
+    modal.setAttribute("aria-hidden","true");
+    document.body.style.overflow = "";
+  }
+
+  bookBtns.forEach(btn=>{
+    btn.addEventListener("click",(e)=>{
+      e.preventDefault();
+      openModal();
+    });
+  });
+
+  closeBtn.addEventListener("click", closeModal);
+
+  modal.addEventListener("click",(e)=>{
+    if(e.target === modal) closeModal();
+  });
+
+  document.addEventListener("keydown",(e)=>{
+    if(e.key === "Escape" && modal.classList.contains("open")) closeModal();
+  });
+
+  // After submit: DO NOT preventDefault (Google Forms needs the POST).
+// Show thanks ONLY after Google responds in the iframe
+const iframe = document.getElementById("hidden_iframe");
+let bookingSubmitted = false;
+
+bookingForm.addEventListener("submit", () => {
+  bookingSubmitted = true; // allow the POST to happen
+});
+
+iframe.addEventListener("load", () => {
+  if (!bookingSubmitted) return; // ignore initial iframe load
+  bookingSubmitted = false;
+
+  // Now show thank you
+  bookingForm.style.display = "none";
+  thanks.style.display = "block";
+});
+
+  closeThanks.addEventListener("click", ()=>{
+    thanks.style.display = "none";
+    bookingForm.style.display = "block";
+    bookingForm.reset();
+    closeModal();
+  });
+</script>
+
+</body>
+</html>
