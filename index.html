@@ -427,13 +427,13 @@ h2{margin-top:0;font-size:32px}
     <form id="bookingForm"
   action="https://docs.google.com/forms/d/e/1FAIpQLSeKOvNsTE75JcYF5FO9RqFYfx4RthG2d8y6APICh4aVFFh9Wg/formResponse"
   method="POST"
-  target="_blank">
+  target="hidden_iframe"
+  accept-charset="UTF-8">
 
   <input type="hidden" name="fvv" value="1">
   <input type="hidden" name="pageHistory" value="0">
 
   <div class="modal-body">
-
     <div class="modal-row">
       <div>
         <label for="bemail">Email</label>
@@ -469,13 +469,13 @@ h2{margin-top:0;font-size:32px}
 
     <div>
       <label for="bmessage">Details</label>
-      <textarea id="bmessage" name="entry.684000561" rows="4" placeholder="Guests, timings, anything we should know…"></textarea>
+      <textarea id="bmessage" name="entry.684000561" rows="4"
+        placeholder="Guests, timings, anything we should know…"></textarea>
     </div>
-
   </div>
 
   <div class="modal-actions">
-    <div class="modal-note">After submitting, check your email for Google Forms receipt (if enabled in Forms settings).</div>
+    <div class="modal-note">After submitting, check your email for Google Forms receipt (if enabled).</div>
     <button class="modal-submit" type="submit">Send Booking Request</button>
   </div>
 </form>
