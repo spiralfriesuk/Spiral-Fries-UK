@@ -425,61 +425,60 @@ h2{margin-top:0;font-size:32px}
     </div>
 
     <form id="bookingForm"
-      action="https://docs.google.com/forms/d/e/1FAIpQLSeKOvNsTE75JcYF5FO9RqFYfx4RthG2d8y6APICh4aVFFh9Wg/formResponse"
-      method="POST"
-      target="hidden_iframe">
+  action="https://docs.google.com/forms/d/e/1FAIpQLSeKOvNsTE75JcYF5FO9RqFYfx4RthG2d8y6APICh4aVFFh9Wg/formResponse"
+  method="POST"
+  target="hidden_iframe">
 
-      <div class="modal-body">
-        <div class="modal-row">
-          <div>
-            <label for="bname">Name</label>
-            <input id="bname" name="entry.1542310162" type="text" required placeholder="Your name">
-          </div>
-          <div>
-            <label for="bphone">Phone</label>
-            <input id="bphone" name="entry.147458240" type="text" required placeholder="07...">
-          </div>
-        </div>
+  <input type="hidden" name="fvv" value="1">
+  <input type="hidden" name="pageHistory" value="0">
 
-        <div class="modal-row">
-          <div>
-            <label for="bemail">Email</label>
-            <input id="bemail" name="entry.1760908652" type="email" required placeholder="you@example.com">
-          </div>
-          <div>
-            <label for="btype">Booking type</label>
-            <select id="btype" name="entry.294273649" required>
-              <option value="">Choose booking type…</option>
-              <option>Weddings</option>
-              <option>Corporate Events</option>
-              <option>Festivals</option>
-              <option>Private Parties</option>
-            </select>
-          </div>
-        </div>
+  <div class="modal-body">
 
-        <div class="modal-row">
-          <div>
-            <label for="bdate">Event date</label>
-            <input id="bdate" name="entry.602307690" type="date" required>
-          </div>
-          <div>
-            <label for="blocation">Location / City</label>
-            <input id="blocation" name="entry.360147946" type="text" required placeholder="Manchester, London…">
-          </div>
-        </div>
-
-        <div>
-          <label for="bmessage">Details</label>
-          <textarea id="bmessage" name="entry.684000561" rows="4" placeholder="Guests, timings, anything we should know…"></textarea>
-        </div>
+    <div class="modal-row">
+      <div>
+        <label for="bemail">Email</label>
+        <input id="bemail" name="entry.1542310162" type="email" required placeholder="you@email.com">
       </div>
-
-      <div class="modal-actions">
-        <div class="modal-note">After submitting, check your email for Google Forms receipt (if enabled in Forms settings).</div>
-        <button class="modal-submit" type="submit">Send Booking Request</button>
+      <div>
+        <label for="bphone">Phone</label>
+        <input id="bphone" name="entry.147458240" type="text" required placeholder="07...">
       </div>
-    </form>
+    </div>
+
+    <div class="modal-row">
+      <div>
+        <label for="btype">Booking type</label>
+        <select id="btype" name="entry.294273649" required>
+          <option value="">Choose booking type…</option>
+          <option>Weddings</option>
+          <option>Corporate Events</option>
+          <option>Festivals</option>
+          <option>Private Parties</option>
+        </select>
+      </div>
+      <div>
+        <label for="bdate">Event date</label>
+        <input id="bdate" name="entry.602307690" type="date" required>
+      </div>
+    </div>
+
+    <div>
+      <label for="blocation">Location / City</label>
+      <input id="blocation" name="entry.360147946" type="text" required placeholder="Manchester, London…">
+    </div>
+
+    <div>
+      <label for="bmessage">Details</label>
+      <textarea id="bmessage" name="entry.684000561" rows="4" placeholder="Guests, timings, anything we should know…"></textarea>
+    </div>
+
+  </div>
+
+  <div class="modal-actions">
+    <div class="modal-note">After submitting, check your email for Google Forms receipt (if enabled in Forms settings).</div>
+    <button class="modal-submit" type="submit">Send Booking Request</button>
+  </div>
+</form>
 
     <!-- Thank you state -->
     <div id="bookingThanks" style="display:none;padding:40px;text-align:center;">
@@ -521,7 +520,7 @@ h2{margin-top:0;font-size:32px}
     // reset state each open
     thanks.style.display = "none";
     bookingForm.style.display = "block";
-    setTimeout(()=> document.getElementById("bname").focus(), 50);
+setTimeout(()=> document.getElementById("bemail").focus(), 50);
   }
 
   function closeModal(){
