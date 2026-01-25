@@ -409,7 +409,7 @@ h2{margin-top:0;font-size:32px}
 </section>
 
 <footer class="reveal">
-  © 2026 Spiral Fries UK
+ 2026 Spiral Fries UK
 </footer>
 
 </div>
@@ -424,31 +424,33 @@ h2{margin-top:0;font-size:32px}
       <button class="modal-close" id="closeBooking" type="button" aria-label="Close">✕</button>
     </div>
 
-    <form id="bookingForm"
-  action="https://docs.google.com/forms/d/e/1FAIpQLSeKOvNsTE75JcYF5FO9RqFYfx4RthG2d8y6APICh4aVFFh9Wg/formResponse"
-  method="POST"
-  target="hidden_iframe"
-  accept-charset="UTF-8">
-
-  <input type="hidden" name="fvv" value="1">
-  <input type="hidden" name="pageHistory" value="0">
+<form id="bookingForm"
+  action="https://formspree.io/f/xeegjznr"
+  method="POST">
 
   <div class="modal-body">
+
     <div class="modal-row">
       <div>
-        <label for="bemail">Email</label>
-        <input id="bemail" name="entry.1542310162" type="email" required placeholder="you@email.com">
+        <label>Name</label>
+        <input type="text" name="name" required placeholder="Your name">
       </div>
+
       <div>
-        <label for="bphone">Phone</label>
-        <input id="bphone" name="entry.147458240" type="text" required placeholder="07...">
+        <label>Phone</label>
+        <input type="text" name="phone" required placeholder="07...">
       </div>
     </div>
 
     <div class="modal-row">
       <div>
-        <label for="btype">Booking type</label>
-        <select id="btype" name="entry.294273649" required>
+        <label>Email</label>
+        <input type="email" name="email" required placeholder="you@example.com">
+      </div>
+
+      <div>
+        <label>Booking type</label>
+        <select name="booking_type" required>
           <option value="">Choose booking type…</option>
           <option>Weddings</option>
           <option>Corporate Events</option>
@@ -456,30 +458,34 @@ h2{margin-top:0;font-size:32px}
           <option>Private Parties</option>
         </select>
       </div>
+    </div>
+
+    <div class="modal-row">
       <div>
-        <label for="bdate">Event date</label>
-        <input id="bdate" name="entry.602307690" type="date" required>
+        <label>Event date</label>
+        <input type="date" name="event_date" required>
+      </div>
+
+      <div>
+        <label>Location / City</label>
+        <input type="text" name="location" required placeholder="Manchester, London…">
       </div>
     </div>
 
     <div>
-      <label for="blocation">Location / City</label>
-      <input id="blocation" name="entry.360147946" type="text" required placeholder="Manchester, London…">
+      <label>Details</label>
+      <textarea name="message" rows="4" placeholder="Guests, timings, anything we should know…"></textarea>
     </div>
 
-    <div>
-      <label for="bmessage">Details</label>
-      <textarea id="bmessage" name="entry.684000561" rows="4"
-        placeholder="Guests, timings, anything we should know…"></textarea>
-    </div>
   </div>
 
   <div class="modal-actions">
-    <div class="modal-note">After submitting, check your email for Google Forms receipt (if enabled).</div>
+    <div class="modal-note">We will contact you to confirm availability.</div>
     <button class="modal-submit" type="submit">Send Booking Request</button>
   </div>
-</form>
 
+</form>
+     
     <!-- Thank you state -->
     <div id="bookingThanks" style="display:none;padding:40px;text-align:center;">
       <h2 style="margin-top:0;">Thank you 🎉</h2>
@@ -509,9 +515,6 @@ h2{margin-top:0;font-size:32px}
   const modal = document.getElementById("bookingModal");
   const closeBtn = document.getElementById("closeBooking");
   const bookBtns = document.querySelectorAll(".book-btn");
-  const bookingForm = document.getElementById("bookingForm");
-  const thanks = document.getElementById("bookingThanks");
-  const closeThanks = document.getElementById("closeThanks");
 
   function openModal(){
     modal.classList.add("open");
@@ -529,6 +532,24 @@ setTimeout(()=> document.getElementById("bemail").focus(), 50);
     document.body.style.overflow = "";
   }
 
+  const bookingForm = document.getElementById("bookingForm");
+
+bookingForm.addEventListener("submit", (e)=>{
+  e.preventDefault();
+
+  fetch(bookingForm.action, {
+    method: "POST",
+    body: new FormData(bookingForm),
+    headers: { "Accept": "application/json" }
+  }).then(()=>{
+    bookingForm.style.display = "none";
+    document.getElementById("bookingThanks").style.display = "block";
+    bookingForm.reset();
+  }).catch(()=>{
+    alert("Something went wrong — please try again.");
+  });
+});
+  
   bookBtns.forEach(btn=>{
     btn.addEventListener("click",(e)=>{
       e.preventDefault();
@@ -548,7 +569,6 @@ setTimeout(()=> document.getElementById("bemail").focus(), 50);
 
   // After submit: DO NOT preventDefault (Google Forms needs the POST).
 // Show thanks ONLY after Google responds in the iframe
-const iframe = document.getElementById("hidden_iframe");
 let bookingSubmitted = false;
 
 bookingForm.addEventListener("submit", () => {
